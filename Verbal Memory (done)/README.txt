@@ -1,0 +1,1 @@
+Require tesseract installed and add to PATH first!
