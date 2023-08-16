@@ -9,16 +9,17 @@ import os
 # Find a way to make python temrinal stays at top without affecting other windows
 
 # From chatgpt, wants to try different data type so i kept it
-global coordinates
-coordinates = []
+global number_coordinates
+number_coordinates = []
 
 def on_click(x, y, button, pressed):
     global coordinates
-    if len(coordinates) == 2:
+    if len(number_coordinates) == 2:
         return False
     elif pressed:
         print(f'First coordinates x:{x}, y:{y}')
-        coordinates.append((x, y))
+        number_coordinates.append((x, y))
+
 
 def clicked(x, y, button, pressed):
     if pressed:
@@ -32,29 +33,31 @@ os.system('cls')
 
 while True:
     with mouse.Listener(
-        on_click=on_click) as listener:
-        print('Click the top left corner, and bottom right corner of texts')
+        on_click=on_click) as listener: 
+        print('Click the top left corner, and bottom right corner of "Number Memory"')
         listener.join()
     try:
-        pyautogui.screenshot('textArea.png', region=(coordinates[0][0],
-                                                    coordinates[0][1],
-                                                    coordinates[1][0]-coordinates[0][0],
-                                                    coordinates[1][1]-coordinates[0][1]))
+        pyautogui.screenshot('numberArea.png', region=(number_coordinates[0][0],
+                                                       number_coordinates[0][1],
+                                                       number_coordinates[1][0]-number_coordinates[0][0],
+                                                       number_coordinates[1][1]-number_coordinates[0][1]))
     except ValueError:
-        coordinates = []
+        number_coordinates = []
         print('Please click again')
     else:
-        if os.path.exists('textArea.png'):
-            img = Image.open('textArea.png')
-            img = img.resize((950, 200), Image.NEAREST)
+        if os.path.exists('numberArea.png'):
+            img = Image.open('numberArea.png')
             text = pytesseract.image_to_string(img,
-                                               lang='eng').replace('\n', ' ').replace('  ', ' ')
-            if len(text) > 20:
+                                               lang='eng').replace('\n', '').replace('\r', '')
+            if len(text) > 8:
                 break
             else:
-                coordinates = []
+                number_coordinates = []
                 text = ''
                 print('Please click again')
+
+os.system('cls')
+input('Now, play a round, when you finished, type finish(F)')
 
 # Speed time
 
@@ -64,4 +67,5 @@ with mouse.Listener(
     listener.join()
 
 time.sleep(0.5)
-pyautogui.write(text, interval=0.01)
+while True:
+    time.sleep(1000)

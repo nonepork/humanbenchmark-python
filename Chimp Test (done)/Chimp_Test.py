@@ -28,6 +28,7 @@ def on_click_coord(x, y, button, pressed):
         print(f'Coordinates x:{x}, y:{y}')
         coordinates.append((x, y))
 
+
 def on_click_amount_coord(x, y, button, pressed):
     global amount_coordinates
     if len(amount_coordinates) == 2:
@@ -35,6 +36,7 @@ def on_click_amount_coord(x, y, button, pressed):
     elif pressed:
         print(f'Coordinates x:{x}, y:{y}')
         amount_coordinates.append((x, y))
+
 
 def on_click_continue_coord(x, y, button, pressed):
     global cont_coordinates
@@ -44,11 +46,13 @@ def on_click_continue_coord(x, y, button, pressed):
         print(f'Coordinates x:{x}, y:{y}')
         cont_coordinates.append((x, y))
 
+
 def click(x,y):
     win32api.SetCursorPos((x,y))
     win32api.mouse_event(win32con.MOUSEEVENTF_LEFTDOWN,0,0)
     time.sleep(0.01)
     win32api.mouse_event(win32con.MOUSEEVENTF_LEFTUP,0,0)
+
 
 def clicked(x, y, button, pressed):
     if pressed:
@@ -104,7 +108,7 @@ while True:
         if os.path.exists('Number.png'):
             img = Image.open('Number.png').resize((80, 80), Image.NEAREST)
             text = pytesseract.image_to_string(img, config="--psm 13").replace('\r', '').replace('\n', '')
-            if len(text) == 1:
+            if str(text) == '5':
                 break
             else:
                 amount_coordinates = []
@@ -127,10 +131,10 @@ while True:
             grayscale=True,
             confidence=0.8)
     except ValueError:
-        newcoordinates = []
+        cont_coordinates = []
         print('Please click again')
     except TypeError:
-        newcoordinates = []
+        cont_coordinates = []
         print('Please click again')
     else:
         if x is not None:
@@ -139,10 +143,11 @@ while True:
 
 # Speed time
 
-os.system('cls')
 while True: # Finding a way to make this quitable :)
+    os.system('cls')
     img = Image.open('Number.png').resize((80, 80), Image.NEAREST)
-    amount = pytesseract.image_to_string(img, config="--psm 13").replace('\r', '').replace('\n', '')
+    amount = pytesseract.image_to_string(img,
+                                         config="--psm 13").replace('\r', '').replace('\n', '')
     print(f'Amount of squares: {amount}')
     click(x_continue, y_continue)
     number_coordinates = []
@@ -151,7 +156,7 @@ while True: # Finding a way to make this quitable :)
     for i in range(1, int(amount)+1):
         x, y = None, None
         Generate_Text(str(i)) 
-        while x is None:
+        while x is None and y is None:
             try:
                 x, y = pyautogui.locateCenterOnScreen(f'{str(i)}.png', 
                     region=(coordinates[0][0],
@@ -159,12 +164,13 @@ while True: # Finding a way to make this quitable :)
                     coordinates[1][0]-coordinates[0][0],
                     coordinates[1][1]-coordinates[0][1]),
                     grayscale=True,
-                    confidence=0.8)
+                    confidence=0.9)
                 time.sleep(0.05)
             except TypeError:
                 continue
                 time.sleep(0.05)
             number_coordinates.append((x, y))
+            print(f'{str(i)} coordinates is {x} {y}')
         os.remove(f'{str(i)}.png')
     for i in range(0, int(amount)):
         click(number_coordinates[i][0], number_coordinates[i][1])
