@@ -1,7 +1,7 @@
-"# Python-benchmark" 
+# Python-benchmark
 
 ### TODO:
 - [ ] Number Memory
 - [ ] Sequence Memory
 - [ ] Visual Memory
-- [ ] Fix Chimp Test
+- [x] Fix Chimp Test

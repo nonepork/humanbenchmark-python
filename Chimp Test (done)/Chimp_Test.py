@@ -20,6 +20,7 @@ def Generate_Text(text):
     ImageDraw.Draw(img).text((13, 0), text, (255, 255, 255), font=font)
     img.save(f'{text}.png')
 
+
 def on_click_coord(x, y, button, pressed):
     global coordinates
     if len(coordinates) == 2:
